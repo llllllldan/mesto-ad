@@ -3,7 +3,7 @@ import axios from "axios";
 const config = {
     baseUrl: "https://mesto.nomoreparties.co/v1/apf-cohort-203",
     headers: {
-        authorization: "fb15848b-5663-40d8-95ca-b42a7eae5a20",
+        authorization: "452def1e-bcd7-4069-a33c-c4f8cef5efe1",
         "Content-Type": "application/json",
     },
 };
