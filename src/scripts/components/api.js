@@ -1,57 +1,61 @@
-import axios from "axios";
-
 const config = {
-    baseUrl: "https://mesto.nomoreparties.co/v1/apf-cohort-203",
-    headers: {
-        authorization: "452def1e-bcd7-4069-a33c-c4f8cef5efe1",
-        "Content-Type": "application/json",
-    },
+  baseUrl: "https://mesto.nomoreparties.co/v1/apf-cohort-203",
+  headers: {
+    authorization: "452def1e-bcd7-4069-a33c-c4f8cef5efe1",
+    "Content-Type": "application/json",
+  },
+};
+
+const request = (url, options = {}) => {
+  return fetch(`${config.baseUrl}${url}`, {
+    ...options,
+    headers: config.headers,
+  }).then((res) => {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`);
+  });
 };
 
 export const getUserInfo = () => {
-    return axios
-        .get(`${config.baseUrl}/users/me`, { headers: config.headers })
-        .then((res) => res.data);
+  return request(`/users/me`);
 };
 
 export const getCardList = () => {
-    return axios.get(`${config.baseUrl}/cards`, { headers: config.headers }).then((res) => res.data);
+  return request(`/cards`);
 };
 
 export const setUserInfo = ({ name, about }) => {
-    return axios
-        .patch(`${config.baseUrl}/users/me`, { name, about }, { headers: config.headers })
-        .then((res) => res.data);
+  return request(`/users/me`, {
+    method: "PATCH",
+    body: JSON.stringify({ name, about }),
+  });
 };
 
 export const setUserAvatar = (avatar) => {
-    return axios
-        .patch(`${config.baseUrl}/users/me/avatar`, { avatar }, { headers: config.headers })
-        .then((res) => res.data);
+  return request(`/users/me/avatar`, {
+    method: "PATCH",
+    body: JSON.stringify({ avatar }),
+  });
 };
 
 export const addNewCard = ({ name, link }) => {
-    return axios
-        .post(`${config.baseUrl}/cards`, { name, link }, { headers: config.headers })
-        .then((res) => res.data);
+  return request(`/cards`, {
+    method: "POST",
+    body: JSON.stringify({ name, link }),
+  });
 };
 
 export const deleteCardFromServer = (cardId) => {
-    return axios
-        .delete(`${config.baseUrl}/cards/${cardId}`, { headers: config.headers })
-        .then((res) => res.data);
+  return request(`/cards/${cardId}`, {
+    method: "DELETE",
+  });
 };
 
 export const changeLikeCardStatus = (cardId, isLiked) => {
-    if (isLiked) {
-        return axios
-            .delete(`${config.baseUrl}/cards/likes/${cardId}`, {
-                headers: config.headers,
-            })
-            .then((res) => res.data);
-    } else {
-        return axios
-            .put(`${config.baseUrl}/cards/likes/${cardId}`, {}, { headers: config.headers })
-            .then((res) => res.data);
-    }
+  const method = isLiked ? "DELETE" : "PUT";
+  return request(`/cards/likes/${cardId}`, {
+    method,
+  });
 };
